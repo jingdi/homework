@@ -1,6 +1,7 @@
 package io.homework.topk.model;
 
 import lombok.Data;
+
 import java.util.PriorityQueue;
 
 /**
@@ -9,7 +10,22 @@ import java.util.PriorityQueue;
 @Data
 public class UrlPool {
 
-    private PriorityQueue<Url> queue = new PriorityQueue<Url>(Constants.MAX_SIZE, (o1, o2) -> (int) (o1.getCount() - o2.getCount()));
+    /**
+     * 比较函数返回值为int，直接返回差值可能导致越界
+     */
+    private PriorityQueue<Url> queue = new PriorityQueue<Url>(Constants.MAX_SIZE, (o1, o2) -> {
+        Long count1 = o1.getCount();
+        Long count2 = o2.getCount();
+
+        if (count1 > count2) {
+            return 1;
+        }
+        if (count1 < count2) {
+            return -1;
+        }
+
+        return 0;
+    });
 
     public void add(Url url) {
         if (queue.size() < Constants.MAX_SIZE) {

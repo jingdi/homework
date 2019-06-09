@@ -22,6 +22,9 @@ public class SubFileHandler implements Runnable {
 
     private LinkedBlockingQueue<UrlPool> poolQueue;
 
+    /**
+     * 这里用Url对象作为value是考虑方便后续构建最小堆
+     */
     private HashMap<String, Url> count = new HashMap<>();
 
     private UrlPool urlPool = new UrlPool();
@@ -37,6 +40,14 @@ public class SubFileHandler implements Runnable {
         buildUrlPool(count);
     }
 
+    /**
+     * 读取文件数据，构建 数据:出现次数 的映射
+     *
+     * 可能出现的极端情况：
+     * 1. 某个数据出现几十亿次，影响不大，记录次数的是long型结构（重写的比较方法之前会有越界隐患，现已优化）
+     * 2. 每个数据只出现几次，这样理论上会导致我们每个小文件维护的映射关系会比较大，可能会OOM，这个情况暂时没想到很好的办法，只能尽量增加小文件的数量以及将该过程改为单线程处理，同一时刻只维护一个小文件的映射关系
+     * @param file
+     */
     private void read(String file) {
         FileReader fileReader = null;
         BufferedReader bufferedReader = null;
@@ -67,6 +78,10 @@ public class SubFileHandler implements Runnable {
         }
     }
 
+    /**
+     * 将数据存入Map
+     * @param uri
+     */
     private void handle(String uri) {
         if (count.containsKey(uri)) {
             Url url = count.get(uri);
@@ -75,19 +90,22 @@ public class SubFileHandler implements Runnable {
             Url url = new Url(uri, 1L);
             count.put(uri, url);
         }
-//        logger.info("url count : " + JSON.toJSONString(count.get(uri)));
     }
 
+    /**
+     * 构建小文件的最小堆，并将该最小堆放入全局的堆队列中
+     * @param urls
+     */
     private void buildUrlPool(HashMap<String, Url> urls) {
         urls.forEach((uri, url) -> {
-//            logger.info("url : " + JSON.toJSONString(url));
             urlPool.add(url);
         });
         try {
-//            logger.info("sub pool : " + JSON.toJSONString(urlPool.getQueue()));
             poolQueue.put(urlPool);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            count.clear();
         }
     }
 }

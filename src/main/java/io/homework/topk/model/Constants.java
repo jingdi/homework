@@ -13,5 +13,13 @@ public class Constants {
 
     public static final int MAX_SIZE = 100;
 
+    /**
+     * 分割的小文件数量，可以根据需要调大，降低OOM的风险
+     */
     public static final int FILE_NUM = 200;
+
+    /**
+     * 是否并发构建小文件的最小堆（为了尽量节省内存，默认为false）
+     */
+    public static final boolean CONCURRENT_HANDLE = false;
 }

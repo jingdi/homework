@@ -17,6 +17,11 @@ public class Writer {
 
     private HashSet<String> filePaths = new HashSet<>();
 
+    /**
+     * 创建小文件，并将数据写入相应的小文件
+     * 文件名根据数据hash值定义，保证相同数据写入同一文件
+     * @param uri
+     */
     public void write(String uri) {
         FileWriter fileWriter = null;
         String path = Constants.ROOT_PATH + Constants.FILE_HEADER + Math.abs(uri.hashCode() % Constants.FILE_NUM) + ".txt";

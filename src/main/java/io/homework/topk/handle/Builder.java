@@ -1,10 +1,9 @@
 package io.homework.topk.handle;
 
+import io.homework.topk.model.Constants;
 import io.homework.topk.model.UrlPool;
 import lombok.Data;
-
 import java.util.HashSet;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
@@ -27,9 +26,17 @@ public class Builder extends Thread {
         this.poolQueue = poolQueue;
     }
 
+    /**
+     * 并发处理小文件数据，为每个小文件创建最小堆
+     */
     private void handle() {
         paths.forEach(path -> {
-            ThreadFactory.executor.execute(new SubFileHandler(path, poolQueue));
+            SubFileHandler fileHandler = new SubFileHandler(path, poolQueue);
+            if (Constants.CONCURRENT_HANDLE) {
+                ThreadFactory.executor.execute(fileHandler);
+            } else {
+                fileHandler.run();
+            }
         });
     }
 

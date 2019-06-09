@@ -18,22 +18,28 @@ public class ServiceStart {
 
     private static final Logger logger = Logger.getLogger("Service");
 
-    private static LinkedBlockingQueue<String> blockingQueue = new LinkedBlockingQueue<>();
+    /**
+     * 充当一个线程同步的信道，当工作线程完成小文件构建后向该队列发送通知消息
+     */
+    private static LinkedBlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
 
     public static void main(String[] args) {
         /**
          *根据uri hash值将大文件拆分为200个小文件
          */
         File file = new File(Constants.RESOURCE_FILE);
-        Reader reader = new Reader(file, blockingQueue);
+        Reader reader = new Reader(file, messageQueue);
         try {
             reader.startReader();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        /**
+         * 阻塞等待小文件构建完成
+         */
         try {
-            blockingQueue.take();
+            messageQueue.take();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,7 +73,7 @@ public class ServiceStart {
                         writer.write("\n");
                     }
                     writer.close();
-                    System.exit(-1);
+                    System.exit(0);
                 }
             }
         } catch (Exception e) {

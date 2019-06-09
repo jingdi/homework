@@ -59,8 +59,8 @@
 {"count":1710,"uri":"https://livepool.europe.champion/2713"}
 {"count":1716,"uri":"https://livepool.europe.champion/275"}
 {"count":1722,"uri":"https://livepool.europe.champion/276"}
-{"count":1734,"uri":"https://livepool.europe.champion/278"}
 {"count":1734,"uri":"https://livepool.europe.champion/287"}
+{"count":1734,"uri":"https://livepool.europe.champion/278"}
 {"count":1782,"uri":"https://livepool.europe.champion/1313"}
 {"count":1854,"uri":"https://livepool.europe.champion/307"}
 {"count":1914,"uri":"https://livepool.europe.champion/317"}
@@ -93,8 +93,8 @@
 {"count":2910,"uri":"https://livepool.europe.champion/13713"}
 {"count":2916,"uri":"https://livepool.europe.champion/1375"}
 {"count":2922,"uri":"https://livepool.europe.champion/1376"}
-{"count":2934,"uri":"https://livepool.europe.champion/1378"}
 {"count":2934,"uri":"https://livepool.europe.champion/1387"}
+{"count":2934,"uri":"https://livepool.europe.champion/1378"}
 {"count":3468,"uri":"https://livepool.europe.champion/277"}
 {"count":4668,"uri":"https://livepool.europe.champion/377"}
 {"count":5851,"uri":"https://livepool.europe.champion/1377"}

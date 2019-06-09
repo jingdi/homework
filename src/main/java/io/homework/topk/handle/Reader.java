@@ -21,12 +21,12 @@ public class Reader extends Thread {
 
     private Processor processor;
 
-    private LinkedBlockingQueue<String> blockingQueue;
+    private LinkedBlockingQueue<String> messageQueue;
 
-    public Reader(File file, LinkedBlockingQueue<String> blockingQueue) {
+    public Reader(File file, LinkedBlockingQueue<String> messageQueue) {
         this.file = file;
         this.processor = new Processor();
-        this.blockingQueue = blockingQueue;
+        this.messageQueue = messageQueue;
     }
 
     @Override
@@ -34,6 +34,10 @@ public class Reader extends Thread {
         read();
     }
 
+    /**
+     * 1. 从大文件中读取数据，放入processor的阻塞队列供写线程消费，队列容量为1000；当写文件的线程处理较慢时，读线程会阻塞
+     * 2. 当第一阶段读写完成后，向主线程共享的阻塞队列发送通知消息，开始下一阶段的处理
+     */
     private void read() {
         FileReader fileReader = null;
         BufferedReader bufferedReader = null;
@@ -42,14 +46,12 @@ public class Reader extends Thread {
             bufferedReader = new BufferedReader(fileReader);
             String uri;
             while ((uri = bufferedReader.readLine()) != null) {
-                processor.offer(uri);
+                processor.put(uri);
             }
-            while (true) {
-                if (processor.getBlockingQueue().size() == 0) {
-                    blockingQueue.offer("start builder...");
-                    break;
-                }
+            while (!processor.getBlockingQueue().isEmpty()) {
+                logger.info("waiting for writing sub files...");
             }
+            messageQueue.offer("start builder...");
         } catch (Exception e) {
             e.printStackTrace();
 

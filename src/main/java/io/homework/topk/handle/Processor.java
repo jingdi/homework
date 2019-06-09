@@ -1,10 +1,6 @@
 package io.homework.topk.handle;
 
-import io.homework.topk.model.Constants;
 import lombok.Data;
-
-import java.io.File;
-import java.io.FileWriter;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
@@ -20,6 +16,9 @@ public class Processor extends Thread {
 
     private Writer writer = new Writer();
 
+    /**
+     * 消费队列消息
+     */
     private void process() {
         String uri;
         try {
@@ -36,7 +35,7 @@ public class Processor extends Thread {
         process();
     }
 
-    public void offer(String uri) {
+    public void put(String uri) {
         try {
             blockingQueue.put(uri);
         } catch (Exception e) {
