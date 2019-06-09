@@ -2,10 +2,28 @@
 
 找出文件中出现次数top k的数据行
 
+说明：
+
+整体思路跟流程：
+
+1. 首先将大文件根据数据的hash值分割为N个小文件，保证相同的数据放入同一个文件中；
+2. 分别处理各个小文件，算出各自的top k；（该过程可选单线程或是多线程处理，多线程时内存中会同时维护多个小文件的数据映射，在极端情况下可能会OOM）
+3. 汇总top k。
+
+极端情况：
+1. 当某个数据出现几十亿次：这种情况不太需要担心，因为我们只会记录数据本身以及出现次数
+2. 每个数据只出现一两次: 这种情况可能会有隐患，因为会导致出现很大的 数据:次数 的Map映射，导致OOM；可以将文件数量调大一些并将该阶段处理设置为单线程避免该情况出现
+3. 读磁盘远远快于写磁盘：这种情况肯定会一直存在，所以在读写线程间加了一个长度为1000的阻塞队列，当写线程处理不过来时，读线程阻塞等待
+
+该方法整体为了尽量避免OOM，效率不是很理想，如果有更好的方法，希望可以指导一下，非常感谢
+
+
 使用方法：
 
 1. 将要计算的文件放在resource文件夹，修改io.homework.topk.model包下Constants的RESOURCE_FILE的值；
 2. 运行io.homework.topk包下ServiceStart的main方法，计算结果存于resource下的result.txt文件
 
-备注：1. k的值对应于io.homework.topk.model包下Constants的MAX_SIZE； 
+备注：1. k的值对应于io.homework.topk.model包下Constants的TOP_SIZE； 
      2. 小文件数量对应于io.homework.topk.model包下Constants的FILE_NUM，可以根据需要调整
+
+

@@ -11,7 +11,7 @@ public class Constants {
 
     public static final String RESOURCE_FILE = "/Users/jingdi/work/topK/homework/src/main/resources/urls.txt";
 
-    public static final int MAX_SIZE = 100;
+    public static final int TOP_SIZE = 100;
 
     /**
      * 分割的小文件数量，可以根据需要调大，降低OOM的风险

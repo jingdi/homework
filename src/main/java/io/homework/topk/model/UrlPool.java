@@ -13,7 +13,7 @@ public class UrlPool {
     /**
      * 比较函数返回值为int，直接返回差值可能导致越界
      */
-    private PriorityQueue<Url> queue = new PriorityQueue<Url>(Constants.MAX_SIZE, (o1, o2) -> {
+    private PriorityQueue<Url> queue = new PriorityQueue<Url>(Constants.TOP_SIZE, (o1, o2) -> {
         Long count1 = o1.getCount();
         Long count2 = o2.getCount();
 
@@ -28,7 +28,7 @@ public class UrlPool {
     });
 
     public void add(Url url) {
-        if (queue.size() < Constants.MAX_SIZE) {
+        if (queue.size() < Constants.TOP_SIZE) {
             queue.add(url);
         } else {
             Url u = queue.peek();

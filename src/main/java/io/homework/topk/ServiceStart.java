@@ -33,6 +33,7 @@ public class ServiceStart {
             reader.startReader();
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(-1);
         }
 
         /**
@@ -42,6 +43,7 @@ public class ServiceStart {
             messageQueue.take();
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(-1);
         }
 
         /**
@@ -67,7 +69,6 @@ public class ServiceStart {
                 count++;
                 if (count == paths.size() && poolQueue.size() == 0) {
                     FileWriter writer = new FileWriter(Constants.ROOT_PATH + "result.txt");
-                    writer.flush();
                     while (!niubilityPool.getQueue().isEmpty()) {
                         writer.write(JSON.toJSONString(niubilityPool.getQueue().poll()));
                         writer.write("\n");
@@ -78,6 +79,7 @@ public class ServiceStart {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(-1);
         }
     }
 }
